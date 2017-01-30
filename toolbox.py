@@ -1,36 +1,35 @@
+from soccersimulator import SoccerTeam, Simulation, SoccerAction
+from soccersimulator import Vector2D
+from soccersimulator.settings import *
+
 class MyState(object):
     def __init__(self,state,idteam,idplayer):
         self.state = state
         self.key = (idteam,idplayer)
         self.middle= Vector2D()
+    @property
     def my_position(self):
         return self.state.player_state(self.key[0],self.key[1]).position
         #equivalent a self.player_state(self.key[0],self.key[1])
+    @property    
     def ball_position(self):
         return self.state.ball.position
-    def aller(self,p):
-        return SoccerAction(p-self.my_position(),Vector2D())
-    def shoot(self,p):
-        return SoccerAction(Vector2D(),p-self.my_position())
-
+    @property
     def position_but_adv(self):
         if self.key[0]==1:
-            return(GAME_WIDTH,GAME_HEIGHT//2)
+            return Vector2D(GAME_WIDTH,GAME_HEIGHT//2)
         else:
-            return(0,GAME_HEIGHT//2)
-    
+            return Vector2D(0,GAME_HEIGHT//2)
+    @property
     def positon_mon_but(self):
         if self.key[0]==1:
-            return(0,GAME_HEIGHT//2)
+            return Vector2D(0,GAME_HEIGHT//2)
         else:
-            return(GAME_WIDTH,GAME_HEIGHT//2)
+            return Vector2D(GAME_WIDTH,GAME_HEIGHT//2)
 
-    def shoot_but_adv(self):
-        self.shoot(self.position_but_adv(self.key[0]))
-    
     def dist_player(self,p):
-        return p.distance(self.my_position())
-    
+        return p.distance(self.my_position)
+    @property
     def joueur_plus_proche(self):
         dmin=175
         for L in self.state.players :
@@ -40,4 +39,20 @@ class MyState(object):
         return player_proche
     
     
-                
+class Action(object):
+    def __init__(self,mystate):
+        self.state = mystate
+    def sprint(self,p):
+        return SoccerAction(p-self.state.my_position,self.state.middle)
+    
+    def shoot(self,p):
+        return SoccerAction(self.state.middle,p-self.state.my_position)
+    @property    
+    def shoot_but_adv(self):
+        return SoccerAction(Vector2D(0,0),self.state.position_but_adv-self.state.my_position)
+    @property    
+    def aller_vers_ball(self):
+        return SoccerAction((mystate.ball_position-mystate.my_position,Vector2D(0,0)))
+        
+
+    
