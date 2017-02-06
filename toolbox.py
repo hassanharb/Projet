@@ -21,7 +21,7 @@ class MyState(object):
         else:
             return Vector2D(0,GAME_HEIGHT//2)
     @property
-    def positon_mon_but(self):
+    def position_mon_but(self):
         if self.key[0]==1:
             return Vector2D(0,GAME_HEIGHT//2)
         else:
