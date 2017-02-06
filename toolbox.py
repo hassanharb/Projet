@@ -37,6 +37,7 @@ class MyState(object):
                 dmin=self.dist_player(self.state.player_state(L[0],L[1]).position)
                 player_proche=L
         return player_proche
+
     
     
 class Action(object):

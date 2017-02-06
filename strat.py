@@ -1,3 +1,4 @@
+from soccersimulator import Strategy
 from soccersimulator import SoccerTeam, Simulation, SoccerAction
 from toolbox import MyState, Action
 from soccersimulator import Vector2D
@@ -13,4 +14,30 @@ def defonceur(mystate):
             return action.sprint(Vector2D(3*GAME_WIDTH//4,GAME_HEIGHT//2))
         else:
             return action.sprint(Vector2D(GAME_WIDTH//4,GAME_HEIGHT//2))
+
+## Strategie
+class ElLooser(Strategy):
+    def __init__(self):
+        Strategy.__init__(self,"Random")
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        return SoccerAction(Vector2D(0,0),mystate.position_but_adv)
+
+
+
+class ElStrategy(Strategy):
+    def __init__(self):
+        Strategy.__init__(self,"Random")
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        return fonceur(mystate)
+ 
+
+
+class ElDefenseur(Strategy):
+    def __init__(self):
+       Strategy.__init__(self,"Random")
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        return defonceur(mystate)
 
