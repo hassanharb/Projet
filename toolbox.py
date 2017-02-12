@@ -14,6 +14,12 @@ class MyState(object):
     @property    
     def ball_position(self):
         return self.state.ball.position
+    @property    
+    def milieu_terrain(self):
+        return Vector2D(GAME_WIDTH/2,GAME_HEIGHT/2)
+    @property    
+    def ball_vitesse(self):
+        return self.state.ball.vitesse
     @property
     def position_but_adv(self):
         if self.key[0]==1:
@@ -53,7 +59,7 @@ class Action(object):
         return SoccerAction(Vector2D(0,0),self.state.position_but_adv-self.state.my_position)
     @property    
     def aller_vers_ball(self):
-        return SoccerAction((mystate.ball_position-mystate.my_position,Vector2D(0,0)))
+        return SoccerAction((self.state.ball_position-self.state.my_position,Vector2D(0,0)))
         
 
     
