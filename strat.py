@@ -23,7 +23,8 @@ def ralentir_bcp(mystate,action):
 
 def defonceur(mystate,action):
     if(mystate.my_position.distance(mystate.ball_position)<1.65):
-        return(action.shoot_but_adv)
+        #return(action.shoot_but_adv)
+        return SoccerAction(mystate.ball_position-mystate.my_position,mystate.position_but_adv-mystate.joueurplusProche)     
     if mystate.my_position.distance(mystate.ball_position)<5:
         return ralentir_peu(mystate,action)
     if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2):
@@ -33,6 +34,7 @@ def defonceur(mystate,action):
     else:
         return action.sprint(Vector2D(GAME_WIDTH/5,mystate.ball_position.y))
             
+
 
 ## Strategie
 class ElLooser(Strategy):

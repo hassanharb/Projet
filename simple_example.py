@@ -1,16 +1,15 @@
 from soccersimulator import SoccerTeam, Simulation
 from soccersimulator import SimuGUI,show_state,show_simu
-from strat import ElStrategy, ElDefenseur, ElLooser, ElStrategySolo
-from teststrat import ElStrategy2
+from harbstrat import ElStrategy, ElDefenseur, ElLooser, ElStrategySolo
+
 
 ## Creation d'une equipe
 team1 = SoccerTeam(name="team1",login="etu1")
 team2 = SoccerTeam(name="team2",login="etu2")
-team1.add("Hassan",ElDefenseur())
+team1.add("Hassan",ElLooser())
 team1.add("Booba",ElLooser())
 team2.add("Paul",ElStrategySolo())
 team2.add("Pogba",ElDefenseur())
-
 
 
 

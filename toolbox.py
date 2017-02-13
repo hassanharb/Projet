@@ -43,7 +43,20 @@ class MyState(object):
                 dmin=self.dist_player(self.state.player_state(L[0],L[1]).position)
                 player_proche=L
         return player_proche
-
+    
+    @property
+    def joueurplusProche(self):
+        dmin=0
+        x=[(idt,idp) for idt,idp in self.state.players if idt == self.key[0] and idp != self.key[1]]
+        dmin=x[0][1]
+        
+#        i=1
+#        for i in x:
+#            if(x[i]<dmin):
+#                dmin=x[min]
+        return self.state.player_state(x[0][0],x[0][1]).position
+        
+            
     
     
 class Action(object):
