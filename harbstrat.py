@@ -9,7 +9,7 @@ def fonceurball(mystate):
     return SoccerAction((mystate.ball_position-mystate.my_position)+(mystate.ball_vitesse)*10,Vector2D())
     
 def fonceur_mini(mystate):
-    return SoccerAction((mystate.ball_position-mystate.my_position)+(mystate.ball_vitesse)*10,(mystate.position_but_adv-mystate.my_position).norm_max(1.5))
+    return SoccerAction((mystate.ball_position-mystate.my_position)+(mystate.ball_vitesse)*10,(mystate.position_but_adv-mystate.my_position).norm_max(1.0))
     
 def fonceur(mystate):
     return SoccerAction((mystate.ball_position-mystate.my_position),mystate.position_but_adv-mystate.my_position)
@@ -99,6 +99,8 @@ class ElStrategy(Strategy):
         return fonceurball(mystate)
 
 
+
+        
 class ElStrategySolo(Strategy):
     def __init__(self):
         Strategy.__init__(self,"ElMatadorSolo")
@@ -110,32 +112,17 @@ class ElStrategySolo(Strategy):
         self.mydic["c"]+=1
         if self.mydic["c"]<0:
             return donothing()
- 
- 
-#        if(mystate.position_mon_but.x==0): 
-#            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.6):
-#                return fonceur_mini(mystate)
-                
-        if(mystate.position_mon_but.x==GAME_WIDTH):        
-            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.6):
-                return fonceur_mini(mystate)
-                
-#        if(mystate.position_mon_but.x==0):        
-#            if (mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.6):
-#                return fonceurball(mystate)
-                
-        if(mystate.position_mon_but.x==GAME_WIDTH):        
-            if (mystate.position_mon_but.distance(mystate.ball_position)>=GAME_WIDTH*0.6):
-            
-                return fonceurball(mystate)
-
         if mystate.my_position.distance(mystate.ball_position)<1.65:
+            return(action.shoot_but_adv)
+            
+        if mystate.my_position.distance(mystate.ball_position)<7:
             return fonceurball(mystate)
+            
 #        if mystate.my_position.distance(mystate.ball_position)<3:
 #            return ralentir_bcp(mystate,action)
-        if mystate.my_position.distance(mystate.ball_position)<9:
+        if mystate.my_position.distance(mystate.ball_position)<7:
             return ralentir_moyen(mystate,action)
-        if mystate.my_position.distance(mystate.ball_position)<11:
+        if mystate.my_position.distance(mystate.ball_position)<9:
             return ralentir_peu(mystate,action)
             
         if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
@@ -148,15 +135,8 @@ class ElStrategySolo(Strategy):
         if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.45):
             if(mystate.position_mon_but.x==0):
                 return action.sprint(Vector2D(0.45*GAME_WIDTH,mystate.ball_position.y))
-                
-#        if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
-#            if(mystate.position_mon_but.x==GAME_WIDTH or mystate.position_mon_but.x==0):
-#             return fonceurball(mystate)           
-          
-        if (mystate.my_position.distance(mystate.ball_position)<5):
-            return fonceurball(mystate)
-        return fonceurball(mystate)
 
+        return fonceurball(mystate)
 
 class ElDefenseur(Strategy):
     def __init__(self):
