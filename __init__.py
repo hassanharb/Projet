@@ -5,8 +5,8 @@ from strat import ElStrategy, ElDefenseur, ElStrategySolo
 ## Creation d'une equipe
 team1 = SoccerTeam(name="Liban",login="Harb")
 team2 = SoccerTeam(name="France",login="PE")
-team1.add("Hassan",ElStrategySolo())
-team2.add("Paul",ElStrategy())
+team1.add("Hassan",ElStrategy())
+team2.add("Paul",ElStrategySolo())
 team2.add("Pogba",ElDefenseur())
 
 def get_team(i):

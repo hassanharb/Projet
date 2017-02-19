@@ -87,12 +87,28 @@ class ElStrategySolo(Strategy):
             return donothing()
         if mystate.my_position.distance(mystate.ball_position)<1.65:
             return(action.shoot_but_adv)
-        if mystate.my_position.distance(mystate.ball_position)<3:
-            return ralentir_bcp(mystate,action)
+            
+        if mystate.my_position.distance(mystate.ball_position)<7:
+            return fonceurball(mystate)
+            
+#        if mystate.my_position.distance(mystate.ball_position)<3:
+#            return ralentir_bcp(mystate,action)
         if mystate.my_position.distance(mystate.ball_position)<7:
             return ralentir_moyen(mystate,action)
         if mystate.my_position.distance(mystate.ball_position)<9:
             return ralentir_peu(mystate,action)
+            
+        if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
+            if(mystate.position_mon_but.x==GAME_WIDTH or mystate.position_mon_but.x==0):
+                return action.sprint(Vector2D(0.5*GAME_WIDTH,mystate.ball_position.y))
+                
+        if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
+            if(mystate.position_mon_but.x==GAME_WIDTH):
+                return action.sprint(Vector2D(0.65*GAME_WIDTH,mystate.ball_position.y))
+        if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.45):
+            if(mystate.position_mon_but.x==0):
+                return action.sprint(Vector2D(0.45*GAME_WIDTH,mystate.ball_position.y))
+
         return fonceurball(mystate)
 
 
