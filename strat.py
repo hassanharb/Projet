@@ -120,12 +120,21 @@ class ElStrategySolo(Strategy):
                 return(action.petit_shoot_but_adv)
             return(action.shoot_but_adv)
             
+<<<<<<< HEAD
         if mystate.my_position.distance(mystate.ball_position)<3:
             return ralentir_bcp(mystate,action)
+=======
+        if mystate.my_position.distance(mystate.ball_position)<7:
+            return fonceurball(mystate)
+            
+#        if mystate.my_position.distance(mystate.ball_position)<3:
+#            return ralentir_bcp(mystate,action)
+>>>>>>> 2abe053afb4f0e6a33c70d4dbefffc389f62c8de
         if mystate.my_position.distance(mystate.ball_position)<7:
             return ralentir_moyen(mystate,action)
         if mystate.my_position.distance(mystate.ball_position)<9:
             return ralentir_peu(mystate,action)
+<<<<<<< HEAD
 
 #        if mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2 :
 #            if mystate.my_position.distance(mystate.milieu_terrain - mystate.my_position + (mystate.position_but_adv-mystate.milieu_terrain)/2)<10:
@@ -133,6 +142,21 @@ class ElStrategySolo(Strategy):
 #            return action.sprint(mystate.milieu_terrain + (mystate.position_but_adv-mystate.milieu_terrain)/9)
             
         return fonceur(mystate)
+=======
+            
+        if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
+            if(mystate.position_mon_but.x==GAME_WIDTH or mystate.position_mon_but.x==0):
+                return action.sprint(Vector2D(0.5*GAME_WIDTH,mystate.ball_position.y))
+                
+        if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
+            if(mystate.position_mon_but.x==GAME_WIDTH):
+                return action.sprint(Vector2D(0.65*GAME_WIDTH,mystate.ball_position.y))
+        if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.45):
+            if(mystate.position_mon_but.x==0):
+                return action.sprint(Vector2D(0.45*GAME_WIDTH,mystate.ball_position.y))
+
+        return fonceurball(mystate)
+>>>>>>> 2abe053afb4f0e6a33c70d4dbefffc389f62c8de
 
 
 
