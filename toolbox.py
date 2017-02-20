@@ -70,6 +70,14 @@ class Action(object):
     @property    
     def shoot_but_adv(self):
         return SoccerAction(Vector2D(0,0),self.state.position_but_adv-self.state.my_position)
+    @property   
+    def petit_shoot_but_adv(self):
+        return SoccerAction(Vector2D(0,0),(self.state.position_but_adv-self.state.my_position).norm_max(2))
+        
+    @property
+    def petit_shoot_joueur_proche(self):
+        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(4))
+    
     @property    
     def aller_vers_ball(self):
         return SoccerAction((self.state.ball_position-self.state.my_position,Vector2D(0,0)))
