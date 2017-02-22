@@ -76,7 +76,7 @@ class Action(object):
         
     @property
     def petit_shoot_joueur_proche(self):
-        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(4))
+        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(5.5))
     
     @property    
     def aller_vers_ball(self):
