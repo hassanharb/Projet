@@ -56,7 +56,22 @@ class MyState(object):
 #                dmin=x[min]
         return self.state.player_state(x[0][0],x[0][1]).position
         
-            
+        
+        
+    @property
+    def joueurAdv_plusProche(self):
+        
+        x=[(idp, self.my_position.distance(self.state.player_state(idt, idp).position)) for idt,idp in self.state.players if idt != self.key[0]]
+        
+        dmin = x[0][1]
+        pmin = 0
+        
+        for idp, dist in x:
+            if(dist<dmin):
+                dmin=dist
+                pmin = idp
+                
+        return self.state.player_state(3-self.key[0], pmin).position
     
     
 class Action(object):
@@ -72,7 +87,7 @@ class Action(object):
         return SoccerAction(Vector2D(0,0),self.state.position_but_adv-self.state.my_position)
     @property   
     def petit_shoot_but_adv(self):
-        return SoccerAction(Vector2D(0,0),(self.state.position_but_adv-self.state.my_position).norm_max(2))
+        return SoccerAction(Vector2D(0,0),(self.state.position_but_adv-self.state.my_position).norm_max(1.9))
         
     @property
     def petit_shoot_joueur_proche(self):
@@ -81,6 +96,10 @@ class Action(object):
     @property    
     def aller_vers_ball(self):
         return SoccerAction((self.state.ball_position-self.state.my_position,Vector2D(0,0)))
+        
+    @property
+    def aller_vers_jApP(self):
+        return SoccerAction(self.state.joueurplusProche-self.state.my_position,Vector2D(0,0))
         
 
     
