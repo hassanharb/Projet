@@ -5,7 +5,7 @@ from strat import ElStrategy, ElDefenseur, ElStrategySolo,ElAilierDroit,ElAilier
 ## Creation d'une equipe
 team1 = SoccerTeam(name="Liban",login="Harb")
 team2 = SoccerTeam(name="France",login="PE")
-team4 = SoccerTeam(name="team4",login="etu4")
+team4 = SoccerTeam(name="Gabon",login="Harouba")
 
 team1.add("Hassan",ElStrategySolo())
 
