@@ -1,13 +1,22 @@
 from soccersimulator import SoccerTeam, SoccerAction
-from strat import ElStrategy, ElDefenseur, ElStrategySolo
+from strat import ElStrategy, ElDefenseur, ElStrategySolo,ElAilierDroit,ElAilierGauche,ElAttaquant4
 
 
 ## Creation d'une equipe
 team1 = SoccerTeam(name="Liban",login="Harb")
 team2 = SoccerTeam(name="France",login="PE")
+team4 = SoccerTeam(name="team4",login="etu4")
+
 team1.add("Hassan",ElStrategySolo())
+
 team2.add("Paul",ElStrategy())
 team2.add("Pogba",ElDefenseur())
+
+team4.add("Hassan",ElDefenseur())
+team4.add("Booba",ElAilierDroit())
+team4.add("Paul",ElAilierGauche())
+team4.add("Pogba",ElAttaquant4())
+
 
 def get_team(i):
     if i==1:

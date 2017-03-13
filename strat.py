@@ -25,6 +25,8 @@ def ralentir_bcp(mystate,action):
         return SoccerAction((mystate.ball_position-mystate.my_position).norm_max(0.01),Vector2D())
 
 
+        
+        
 def defonceur(mystate,action):
     
     if(mystate.my_position.distance(mystate.ball_position)<1.65):
@@ -32,14 +34,98 @@ def defonceur(mystate,action):
     
     if(mystate.my_position.distance(mystate.ball_position)<10):
         return fonceurballdef(mystate)
+        
+    p=SoccerAction((mystate.position_mon_but-mystate.my_position)+(mystate.ball_position-mystate.position_mon_but)/2,Vector2D()) 
+    
+    if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.38 and mystate.my_position.distance(mystate.ball_position)>mystate.joueurAdv_plusProche.distance(mystate.ball_position)):
+        return p
               
     if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2):
         return fonceurball(mystate)
         
-    p=SoccerAction((mystate.position_mon_but-mystate.my_position)+(mystate.ball_position-mystate.position_mon_but)/2,Vector2D())
+    
     if(mystate.my_position.distance((mystate.position_mon_but-mystate.my_position)+(mystate.ball_position-mystate.position_mon_but)/2)<6):
         return donothing()
     return p
+
+
+def ailierGauche(mystate,action):
+    
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<0.65*GAME_WIDTH and mystate.position_mon_but.distance(mystate.ball_position)>0.35*GAME_WIDTH):
+        return action.petit_shoot_ailier_joueur_proche
+        
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)>=0.65*GAME_WIDTH):
+        return action.shoot_but_adv
+
+    if mystate.my_position.distance(mystate.ball_position)<10:
+            return fonceurballdef(mystate)            
+                
+    if(mystate.position_mon_but.x==0):
+        if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))<GAME_HEIGHT*0.25:
+            return fonceurball(mystate)
+            
+            
+        if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):
+            return action.sprint(Vector2D(GAME_WIDTH*0.6,GAME_HEIGHT*0.75))
+        return action.sprint(Vector2D(GAME_WIDTH*0.35,GAME_HEIGHT*0.75))
+        
+    if(mystate.position_mon_but.x==GAME_WIDTH):
+        if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))>GAME_HEIGHT*0.75:
+            return fonceurball(mystate)
+            
+        if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):
+            return action.sprint(Vector2D(GAME_WIDTH*0.4,GAME_HEIGHT*0.25))
+        return action.sprint(Vector2D(GAME_WIDTH*0.65,GAME_HEIGHT*0.25))
+        
+    return fonceurball(mystate)
+        
+        
+def ailierDroit(mystate,action):
+    
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<0.65*GAME_WIDTH and mystate.position_mon_but.distance(mystate.ball_position)>0.35*GAME_WIDTH):
+        return action.petit_shoot_ailier_joueur_proche
+        
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)>=0.68*GAME_WIDTH):
+        return action.shoot_but_adv     
+    
+    if mystate.my_position.distance(mystate.ball_position)<10:
+            return fonceurballdef(mystate)
+        
+    if(mystate.position_mon_but.x==0):
+        if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))>GAME_HEIGHT*0.75:
+            return fonceurball(mystate)
+            
+        if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):
+            return action.sprint(Vector2D(GAME_WIDTH*0.6,GAME_HEIGHT*0.2))
+        return action.sprint(Vector2D(GAME_WIDTH*0.35,GAME_HEIGHT*0.2))
+        
+    if(mystate.position_mon_but.x==GAME_WIDTH):
+        if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))<GAME_HEIGHT*0.25:
+            return fonceurball(mystate)
+            
+        if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):
+            return action.sprint(Vector2D(GAME_WIDTH*0.4,GAME_HEIGHT*0.8))
+        return action.sprint(Vector2D(GAME_WIDTH*0.65,GAME_HEIGHT*0.8))
+        
+    return fonceurball(mystate)
+    
+class ElAilierDroit(Strategy):
+    def __init__(self):
+        Strategy.__init__(self,"Brute")
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        action=Action(mystate)
+        return ailierDroit(mystate,action)
+        
+class ElAilierGauche(Strategy):
+    def __init__(self):
+        Strategy.__init__(self,"Brute")
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        action=Action(mystate)
+        return ailierGauche(mystate,action)
+        
+        
             
             
 class ElDefenseur(Strategy):
@@ -94,6 +180,47 @@ class ElStrategy(Strategy):
 
             if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
                 return action.sprint(Vector2D(0.5*GAME_WIDTH,mystate.ball_position.y))
+
+        return fonceurball(mystate)
+        
+class ElAttaquant4(Strategy):
+    def __init__(self):
+        Strategy.__init__(self,"ElMatadorSolo")
+        self.mydic = dict()
+        self.mydic["c"] = 0
+    def compute_strategy(self,state,id_team,id_player):
+        mystate= MyState(state,id_team,id_player)
+        action= Action(mystate)
+        self.mydic["c"]+=1
+        if self.mydic["c"]<0:
+            return donothing()
+            
+        if mystate.my_position.distance(mystate.ball_position)<1.65:
+            if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.35 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
+                return(action.petit_shoot_but_adv)
+            return(action.shoot_but_adv)
+            
+        if mystate.my_position.distance(mystate.ball_position)<10:
+            return fonceurballdef(mystate)
+            
+        if (mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):     
+            if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))<GAME_HEIGHT*0.25 or mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))>GAME_HEIGHT*0.75:
+                return action.sprint(Vector2D(mystate.ball_position.x,GAME_HEIGHT/2))
+            
+         
+        if(mystate.position_mon_but.x==GAME_WIDTH):
+#            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.25):
+#                return action.sprint(Vector2D(0.65*GAME_WIDTH,mystate.ball_position.y))
+            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2): 
+                return action.sprint(Vector2D(0.4*GAME_WIDTH,mystate.ball_position.y))
+            
+            
+        if(mystate.position_mon_but.x==0):
+#            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.45):
+#                return action.sprint(Vector2D(0.4*GAME_WIDTH,mystate.ball_position.y))
+
+            if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
+                return action.sprint(Vector2D(0.6*GAME_WIDTH,mystate.ball_position.y))
 
         return fonceurball(mystate)
 

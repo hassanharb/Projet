@@ -44,17 +44,20 @@ class MyState(object):
                 player_proche=L
         return player_proche
     
+    
     @property
     def joueurplusProche(self):
-        dmin=0
-        x=[(idt,idp) for idt,idp in self.state.players if idt == self.key[0] and idp != self.key[1]]
-        dmin=x[0][1]
+        x=[(idp, self.my_position.distance(self.state.player_state(idt, idp).position)) for idt,idp in self.state.players if idt == self.key[0] and idp != self.key[1]]
         
-#        i=1
-#        for i in x:
-#            if(x[i]<dmin):
-#                dmin=x[min]
-        return self.state.player_state(x[0][0],x[0][1]).position
+        dmin = x[0][1]
+        pmin = x[0][0]
+        
+        for idp, dist in x:
+            if(dist<dmin):
+                dmin=dist
+                pmin = idp
+                
+        return self.state.player_state(self.key[0], pmin).position
         
         
         
@@ -64,7 +67,7 @@ class MyState(object):
         x=[(idp, self.my_position.distance(self.state.player_state(idt, idp).position)) for idt,idp in self.state.players if idt != self.key[0]]
         
         dmin = x[0][1]
-        pmin = 0
+        pmin = x[0][0]
         
         for idp, dist in x:
             if(dist<dmin):
@@ -92,6 +95,10 @@ class Action(object):
     @property
     def petit_shoot_joueur_proche(self):
         return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(5.5))
+        
+    @property
+    def petit_shoot_ailier_joueur_proche(self):
+        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(3.0))
     
     @property    
     def aller_vers_ball(self):
@@ -99,7 +106,11 @@ class Action(object):
         
     @property
     def aller_vers_jApP(self):
-        return SoccerAction(self.state.joueurplusProche-self.state.my_position,Vector2D(0,0))
+        return SoccerAction(self.state.joueurplusProchee-self.state.my_position,Vector2D(0,0))
+        
+    @property   
+    def ailierGauche(self):
+        return(SoccerAction(Vector2D(self.state.ball_position.x,GAME_HEIGHT*0.75)-self.state.my_position,Vector2D(0,0)))
         
 
     
