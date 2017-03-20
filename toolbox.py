@@ -35,14 +35,7 @@ class MyState(object):
 
     def dist_player(self,p):
         return p.distance(self.my_position)
-    @property
-    def joueur_plus_proche(self):
-        dmin=175
-        for L in self.state.players :
-            if L[0]==self.key[0] and L[1]!=self.key[1] and dmin>self.dist_player(state.player_state(L[0],L[1]).position) :
-                dmin=self.dist_player(self.state.player_state(L[0],L[1]).position)
-                player_proche=L
-        return player_proche
+
     
     
     @property
