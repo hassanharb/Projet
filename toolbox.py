@@ -113,4 +113,38 @@ class Action(object):
         return(SoccerAction(Vector2D(self.state.ball_position.x,GAME_HEIGHT*0.75)-self.state.my_position,Vector2D(0,0)))
         
 
-    
+
+
+# Shoot ameliore
+
+def expf(a,b,x):
+    return min(b*(1-math.exp(-a*x)),15)
+
+def shootf(fct,mystate):
+    return SoccerAction(Vector2D(),(mystate.position_but_adv-mystate.my_position).normalize()*fct)
+
+
+
+
+
+
+
+class Shootameliorer(object):
+    def __init__(self,mystate,dist_ball_but):
+        self.state = mystate
+        self.x=dist_ball_but
+        
+    @property
+    def shoot(self):
+        if(self.state.ball_position.distance(Vector2D(self.state.position_but_adv.x,self.state.ball_position.y))<=(1./7)*GAME_WIDTH/2):
+            if self.state.ball_position.distance(Vector2D(self.state.ball_position.x,GAME_HEIGHT/2))<=(1./4)*GAME_HEIGHT:
+                return shootf(expf(20,2.84,self.x),self.state)
+            return shootf(expf(7.3,4.2,self.x),self.state)
+        if(self.state.ball_position.distance(Vector2D(self.state.position_but_adv.x,self.state.ball_position.y))<=(2./7)*GAME_WIDTH/2):
+            if self.state.ball_position.distance(Vector2D(self.state.ball_position.x,GAME_HEIGHT/2))<=(1/4)*GAME_HEIGHT:
+                return shootf(expf(20,4.2,self.x),self.state)
+            return shootf(expf(19.3,4.2,self.x),self.state)
+        if(self.state.ball_position.distance(Vector2D(self.state.position_but_adv.x,self.state.ball_position.y))<=(3./7)*GAME_WIDTH/2) and self.state.ball_position.distance(Vector2D(self.state.ball_position.x,GAME_HEIGHT/2))<=(1./4)*GAME_HEIGHT:
+            return shootf(expf(18.6,11.1,self.x),self.state)
+                        
+                        
