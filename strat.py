@@ -3,7 +3,7 @@ from soccersimulator import SoccerTeam, Simulation, SoccerAction
 from toolbox import MyState, Action
 from soccersimulator import Vector2D
 from soccersimulator.settings import *
-import random
+#import random
 
 def fonceurball(mystate):
     return SoccerAction((mystate.ball_position-mystate.my_position)+(mystate.ball_vitesse)*10,Vector2D())
@@ -29,24 +29,22 @@ def ralentir_bcp(mystate,action):
         
         
 def defonceur(mystate,action):
-    
-    if(mystate.my_position.distance(mystate.ball_position)<1.65):
-        return action.petit_shoot_joueur_proche
-    
-    if(mystate.my_position.distance(mystate.ball_position)<7):
-        return fonceurballdef(mystate)
-        
     p=SoccerAction((mystate.position_mon_but-mystate.my_position)+(mystate.ball_position-mystate.position_mon_but)/2,Vector2D()) 
     
-    if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.39 and mystate.my_position.distance(mystate.ball_position)>mystate.joueurAdv_plusProche.distance(mystate.ball_position)):
-        return p
-              
-    if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2):
-        return fonceurball(mystate)
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.75):
+        return action.shoot_but_adv
         
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)>=GAME_WIDTH*0.75):
+        return action.petit_shoot_joueur_proche
     
-    if(mystate.my_position.distance((mystate.position_mon_but-mystate.my_position)+(mystate.ball_position-mystate.position_mon_but)/2)<6):
-        return donothing()
+    if(mystate.my_position.distance(mystate.ball_position)<10):
+        return fonceurballdef(mystate)
+        
+
+    
+    if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2):
+        return fonceurballdef(mystate)
+        
     return p
     
 def defonceur4(mystate,action):
@@ -80,17 +78,11 @@ def defonceur4(mystate,action):
 
 def ailierGauche(mystate,action):
     
-    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.5):
-                return action.petit_shoot_but_adv
-                
-    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<0.62*GAME_WIDTH and mystate.position_mon_but.distance(mystate.ball_position)>0.5*GAME_WIDTH):
-         rand=random.randint(0,3)
-         print(rand)
-         if(rand==0):
-            return action.petit_shoot_ailier_joueur_proche
-         else:
-            return action.petit_shoot_but_adv
-        
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.75):
+        return action.shoot_but_adv
+
+    if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.5 and mystate.my_position.distance(mystate.ball_position)<mystate.joueurAdv_plusProche.distance(mystate.ball_position) and mystate.my_position.distance(mystate.ball_position)<mystate.joueurplusProche.distance(mystate.ball_position)):
+        return fonceurball(mystate)
         
     if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)>=0.65*GAME_WIDTH):
         return action.shoot_but_adv
@@ -117,20 +109,15 @@ def ailierGauche(mystate,action):
         return action.sprint(Vector2D(GAME_WIDTH*0.65,GAME_HEIGHT*0.3))
         
     return fonceurball(mystate)
-        
-        
+    
+    
 def ailierDroit(mystate,action):
     
-    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.5):
-                return action.petit_shoot_but_adv
+    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.75):
+        return action.shoot_but_adv
                 
-    if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)<0.62*GAME_WIDTH and mystate.position_mon_but.distance(mystate.ball_position)>0.5*GAME_WIDTH):
-        rand=random.randint(0,3)
-        print(rand)
-        if(rand==0):
-            return action.petit_shoot_ailier_joueur_proche
-        else:
-            return action.petit_shoot_but_adv
+    if(mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.5 and mystate.my_position.distance(mystate.ball_position)<mystate.joueurAdv_plusProche.distance(mystate.ball_position) and mystate.my_position.distance(mystate.ball_position)<mystate.joueurplusProche.distance(mystate.ball_position)):
+        return fonceurball(mystate)
         
     if(mystate.my_position.distance(mystate.ball_position)<1.65 and mystate.position_mon_but.distance(mystate.ball_position)>=0.65*GAME_WIDTH):
         return action.shoot_but_adv     
@@ -216,9 +203,11 @@ class ElStrategy(Strategy):
         action= Action(mystate)
         self.mydic["c"]+=1
         if self.mydic["c"]<0:
-            return donothing()
+            return donothing()                
             
         if mystate.my_position.distance(mystate.ball_position)<1.65:
+            if mystate.ball_position.y==GAME_HEIGHT//2:
+                return action.shoot_but_adv
             if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.35 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
                 return(action.petit_shoot_but_adv)
             return(action.shoot_but_adv)
@@ -293,7 +282,7 @@ class ElAttaquant4(Strategy):
         pp=SoccerAction((mystate.position_but_adv-mystate.my_position)+(mystate.ball_position-mystate.position_but_adv)/4,Vector2D())
         
         if mystate.my_position.distance(mystate.ball_position)<1.65:
-            if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.35 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
+            if(mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH*0.5 and mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH*0.65):
                 return(action.petit_shoot_but_adv)
             return(action.shoot_but_adv)
             
@@ -303,6 +292,10 @@ class ElAttaquant4(Strategy):
         if (mystate.position_mon_but.distance(mystate.ball_position)>GAME_WIDTH/2):     
             if mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))<GAME_HEIGHT*0.25 or mystate.ball_position.distance(Vector2D(mystate.ball_position.x,GAME_HEIGHT))>GAME_HEIGHT*0.75:
                 return p
+                
+            if(mystate.position_mon_but.distance(mystate.ball_position)<0.65*GAME_WIDTH and mystate.position_mon_but.distance(mystate.ball_position)>0.5*GAME_WIDTH):
+                return fonceurball(mystate)
+                
             if(mystate.my_position.distance(mystate.ball_position)>mystate.joueurplusProche.distance(mystate.ball_position)):
                 return pp           
          
@@ -312,7 +305,7 @@ class ElAttaquant4(Strategy):
             
             
         if(mystate.position_mon_but.x==0):
-            if (mystate.position_mon_but.distance(mystate.ball_position)<=GAME_WIDTH/2):
+            if (mystate.position_mon_but.distance(mystate.ball_position)<GAME_WIDTH/2):
                 return action.sprint(Vector2D(0.6*GAME_WIDTH,mystate.ball_position.y))
 
         return fonceurball(mystate)

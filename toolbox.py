@@ -83,11 +83,11 @@ class Action(object):
         return SoccerAction(Vector2D(0,0),self.state.position_but_adv-self.state.my_position)
     @property   
     def petit_shoot_but_adv(self):
-        return SoccerAction(Vector2D(0,0),(self.state.position_but_adv-self.state.my_position).norm_max(1.9))
+        return SoccerAction(Vector2D(0,0),(self.state.position_but_adv-self.state.my_position).norm_max(1.8))
         
     @property
     def petit_shoot_joueur_proche(self):
-        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(5.5))
+        return SoccerAction(Vector2D(0,0),(self.state.joueurplusProche-self.state.my_position).norm_max(4.5))
         
     @property
     def petit_shoot_ailier_joueur_proche(self):
